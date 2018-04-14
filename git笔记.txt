@@ -14,5 +14,7 @@ git pull <远程名> <远程分支名>:<本地分支名>
 	做法三：git stash暂存你的修改,此时git pull后就是远程dev的代码了，如果可以用git stash pop将你的代码取出来合并到拉下来的代码中。
 
 
+在本地创建.gitignore文件后，将要过滤的文件名或后缀名放入到这个文件中，这个文件不会提交到仓库中，但是如果远程仓库中有这个文件，可以拉下来并且会覆盖
+了本地同名文件。可以使用git check-ignore -v App.class 来查看.gitignore中对应的规则
 
 
