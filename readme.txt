@@ -33,3 +33,4 @@ git@huangjia-Latitude-E5440:~/git/learngit$ git pull
 更新 83417aa..78658a1
 Fast-forward
 
+gdfjisodjfosdjosddijfdofgitpull
