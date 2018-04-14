@@ -15,6 +15,7 @@ git pull a file
 
 git pull <远程名> <远程分支名>:<本地分支名>
 git使用push追踪
+模拟多个用户操作一个远程分支的情况
 
 git pull
 当前分支没有跟踪信息。
