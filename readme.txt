@@ -8,4 +8,5 @@ git has a mutable index called stage
 git tracks changes
 
 git push origin master
+git pull dev
 
