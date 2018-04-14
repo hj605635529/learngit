@@ -9,4 +9,5 @@ git tracks changes
 
 git push origin master
 git pull dev
+git pull dev子分支dev2
 
