@@ -9,3 +9,5 @@ git tracks changes
 
 git push origin master
 
+git pull a file
+
