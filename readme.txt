@@ -11,3 +11,5 @@ git push origin master
 git pull dev
 git pull dev子分支dev2
 
+git pull a file
+
