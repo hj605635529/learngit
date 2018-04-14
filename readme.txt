@@ -13,3 +13,4 @@ git pull dev子分支dev2
 
 git pull a file
 
+git pull <远程名> <远程分支名>:<本地分支名>
