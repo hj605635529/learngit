@@ -1,0 +1,1 @@
+测试下远程有log文件，本地中.gitignore中配置了忽略log文件，log文件是不会ommit的但是pull的时候还会不会把这个log文件拉下来
