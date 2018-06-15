@@ -17,4 +17,8 @@ git pull <远程名> <远程分支名>:<本地分支名>
 在本地创建.gitignore文件后，将要过滤的文件名或后缀名放入到这个文件中，这个文件不会提交到仓库中，但是如果远程仓库中有这个文件，可以拉下来并且会覆盖
 了本地同名文件。可以使用git check-ignore -v App.class 来查看.gitignore中对应的规则
 
+当用git remote add origin git@github.com:hj605635529/code2.git 去关联一个远程仓库时，出现远程origin已经存在这个错误时可以用：
+ git remote rm origin
+
+
 
