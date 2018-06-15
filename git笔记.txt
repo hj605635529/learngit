@@ -20,5 +20,8 @@ git pull <远程名> <远程分支名>:<本地分支名>
 当用git remote add origin git@github.com:hj605635529/code2.git 去关联一个远程仓库时，出现远程origin已经存在这个错误时可以用：
  git remote rm origin
 
+gitk命令可以图形化界面展示分支信息 -----哇，第一次知道这个东西，还挺好用的
 
+git branch -D dev 删除本地dev分支
+git push origin :dev删除远程dev分支 还可以用git push -d origin dev 
 
