@@ -9,7 +9,7 @@ svn历史库存在中央仓库，每次对比与提交代码都必须连接到�
 git pull的用法：
 git pull <远程名> <远程分支名>:<本地分支名>
 比如：张三管理整个项目的master分支，他每天下班前将dev1,dev2,dev3三个分支merge到master分支上，然后推送到远程master分支。
-	李四管理着dev1分支，他每天上班前将master分支上dev2,dev3更新的东西同步到dev1上。此时处理方式就是git origin master:dev1
+	李四管理着dev1分支，他每天上班前将master分支上dev2,dev3更新的东西同步到dev1上。此时处理方式就是git pull origin master:dev1
 	如果是本地dev1分支想要拿到远程dev1分支的更新,并且本地dev1和远程dev1分支建立追踪关系。我们只需要git pull就好了。
 
 多人合作开发：
