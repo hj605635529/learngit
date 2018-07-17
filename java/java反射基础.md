@@ -1,4 +1,4 @@
-# java--反射
+# java反射基础
 
 [TOC]
 
@@ -594,15 +594,94 @@ class Member2 implements Serializable {
 name=huangjia:age=22
 ```
 
+## 反射与泛型
 
+拿一个例子来说，比如定义一个字符串类型的List，`List<String> list`，如果我们想往里面添加一个`Integer`类型的元素，能添加进去么？正常情况下，是不行的，因为编译的时候就直接提示错误了，不过通过反射我们可以实现：
 
+```java
+@Test
+public void test7(){
+    List<String> stringList = new ArrayList<String>();
 
+    stringList.add("hello");
+  //  stringList.add(10);
 
+    Class<? extends List> aClass = stringList.getClass();
+    try {
+        Method add = aClass.getMethod("add", Object.class);
+        add.invoke(stringList,10);
+    } catch (NoSuchMethodException e) {
+        e.printStackTrace();
+    } catch (IllegalAccessException e) {
+        e.printStackTrace();
+    } catch (InvocationTargetException e) {
+        e.printStackTrace();
+    }
+    System.out.println(stringList);
+}
+```
 
+结果：
 
+```java
+[hello, 10]
+```
 
+**因为泛型是用于编译期间的，编译过后泛型擦除，所以我们才可以借助反射来实现**
 
+## JDK 7处理反射方法的异常
 
+在JDK 7之前，当调用一个反射方法时，不得不捕获多个不相关的检查期异常，比如上面那个例子。JDK 7引入了一个新的反射操作相关异常的父类 `ReflectiveOperationException`，这样的话就可以通过这一异常来捕获所有其他反射操作相关的子类异常，从而使我们的代码更加简洁：
+
+```java
+public void test7(){
+    List<String> stringList = new ArrayList<String>();
+
+    stringList.add("hello");
+  //  stringList.add(10);
+
+    Class<? extends List> aClass = stringList.getClass();
+    try {
+        Method add = aClass.getMethod("add", Object.class);
+        add.invoke(stringList,10);
+    } catch (ReflectiveOperationException e) { 
+        e.printStackTrace();
+    }
+    System.out.println(stringList);
+}
+```
+
+## 总结
+
+  到这里，有关反射的内容基本就学习完了，现在来简单总结一下。反射增加了程序的灵活性，所以在一般的框架中使用比较多，如Spring等。反射的功能很强大，在一定程度上可以说是破坏了Java语言封装的特性，另外反射调用的时候可以忽略权限的检查，从而可能会导致对象的安全性问题。不过，我们不妨换一个角度来思考，思考下什么是封装？什么是安全？
+
+所谓封装，就是将具体的实现细节隐藏，将实现后的结果通过共有方法返回给外部调用，而针对私有方法，即使别人能通过反射的方式调用，但即使调用但却得不到一个完整的结果，因为一般情况下只有共有方法的返回才是完整的。从这一点来说，封装性其实没有被破坏。
+
+而所谓安全，如果是为了保护源码的话，那其实没必要，即使不通过反射，也有其他方式获取源码。
+
+因为Java语言毕竟是一种静态语言，为了让语言拥有动态的特性，必须要有反射机制，而反射机制本身就是底层的处理，不可能按常规的封装特性来处理。也就是说不给调用私有方法的能力，很多程序受到局限，那么实现起来就麻烦了。
+
+所以说我们可以认为，反射机制只是提供了一种强大的功能，使得开发者能在封装之外，按照特定的需要实现一些功能。没有太多的必要纠结于反射是否安全等问题。
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
 
 
 
