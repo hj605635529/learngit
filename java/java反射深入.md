@@ -254,4 +254,4 @@ class NativeMethodAccessorImpl extends MethodAccessorImpl {
 
 画了个图表示invoke方法的过程![选区_171.png](https://i.loli.net/2018/07/18/5b4ea2be696f4.png)
 
-转自：http://www.sczyh30.com/posts/Java/java-reflection-2/
+来源：http://www.sczyh30.com/posts/Java/java-reflection-2/
