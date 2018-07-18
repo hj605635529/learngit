@@ -4,7 +4,7 @@
 
 
 
-##浅析invoke过程
+## 浅析invoke过程
 
 invoke方法用来在运行时动态地调用某个实例的方法。它的实现如下:
 
@@ -248,4 +248,10 @@ class NativeMethodAccessorImpl extends MethodAccessorImpl {
 }
 ```
 
-每次NativeMethodAccessorImpl.invoke()方法被调用时，程序调用计数器都会增加1，看看是否超过阈值；一旦超过，则调用MethodAccessorGenerator.generateMethod()来生成Java版的MethodAccessor的实现类，并且改变DelegatingMethodAccessorImpl所引用的MethodAccessor为Java版。后续经由DelegatingMethodAccessorImpl.invoke()调用到的就是Java版的实现了。 到这里，我们已经追寻到native版的invoke方法在Java一侧声明的最底层 - invoke0了
+每次NativeMethodAccessorImpl.invoke()方法被调用时，程序调用计数器都会增加1，看看是否超过阈值；一旦超过，则调用MethodAccessorGenerator.generateMethod()来生成Java版的MethodAccessor的实现类，并且改变DelegatingMethodAccessorImpl所引用的MethodAccessor为Java版。后续经由DelegatingMethodAccessorImpl.invoke()调用到的就是Java版的实现了。 到这里，我们已经追寻到native版的invoke方法在Java一侧声明的最底层 - invoke0了.
+
+## 总结
+
+画了个图表示invoke方法的过程![选区_171.png](https://i.loli.net/2018/07/18/5b4ea2be696f4.png)
+
+转自：http://www.sczyh30.com/posts/Java/java-reflection-2/
