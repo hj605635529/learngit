@@ -123,7 +123,7 @@ interface java.lang.Comparable
 
 > public Constructor<T> getConstructor(Class<?>... parameterTypes)    throws NoSuchMethodException, SecurityException
 
-- 取得类中的所有构造:
+- 取得类中的所有公共构造:
 
 >  public Constructor<?>[] getConstructors() throws SecurityException
 
