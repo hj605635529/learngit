@@ -167,7 +167,11 @@ Set<String> strSet = stream.collect(Collectors.toSet());
 
 - map、flatMap
 
-  `map`方法是一个一对一的映射，每输入一个数据也只会输出一个值。  `flatMap`方法是一对多的映射，对每一个元素映射出来的仍旧是一个`Stream`，然后会将这个`子Stream`的元素映射到父集合中，栗子如下： 
+  `map`方法是一个一对一的映射，每输入一个数据也只会输出一个值。 ![选区_187.png](https://i.loli.net/2018/07/22/5b5461c4035c2.png)
+
+  
+
+   `flatMap`方法是一对多的映射，对每一个元素映射出来的仍旧是一个`Stream`，然后会将这个`子Stream`的元素映射到父集合中，栗子如下： 
 
 ```java
 Stream<List<Integer>> inputStream = Stream.of(Arrays.asList(1), Arrays.asList(2, 3), Arrays.asList(4, 5, 6));
@@ -180,6 +184,8 @@ integerList.forEach(System.out::println);
 
 `limit`用于限制获取多少个结果，与数据库中的`limit`作用类似，`skip`用于排除前多少个结果。
 
+![选区_188.png](https://i.loli.net/2018/07/22/5b5462498a12b.png)
+
 - sorted
 
 `sorted`的栗子前面也举过了，`sorted`函数需要传入一个实现`Comparator`函数式接口的对象，该接口的抽象方法`compare`接收两个参数并返回一个整型值，作用就是排序，与其他常见排序方法一致。
@@ -187,6 +193,8 @@ integerList.forEach(System.out::println);
 - distinct
 
 `distinct`用于剔除重复，与数据库中的`distinct`用法一致。
+
+![选区_185.png](https://i.loli.net/2018/07/22/5b5461c3ebc07.png)
 
 - findFirst
 
