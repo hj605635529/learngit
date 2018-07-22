@@ -97,7 +97,7 @@ public class HelloWorld
 
 `Stream API`的编写大量依赖`lambda表达式`以及`lambda表达式`的`引用方法`和`引用构造器`
 
-##如何使用Stream
+## 如何使用Stream
 
 ```
 A sequence of elements supporting sequential and parallel aggregate operations1
