@@ -148,7 +148,7 @@ String[] str = {"Hello World", "Jiaming Chen", "Zhouhang Cheng"};
 Stream<String> stream = Stream.of(str);
 
 String[] strArray = stream.toArray(String[]::new);
-List<String> strList = stream.collect(Collectors.toList());
+List<String> strList = stream.collect(Collectors.toList());　//toList()方法是Ｃollectors的静态方法
 ArrayList<String> strArrayList = stream.collect(Collectors.toCollection(ArrayList::new));
 Set<String> strSet = stream.collect(Collectors.toSet());
 ```
@@ -209,18 +209,94 @@ integerList.forEach(System.out::println);
 
 `reduce`方法用于组合`Stream`元素，它可以提供一个初始值然后按照传入的计算规则依次和`Stream`中的元素进行计算，因此上文介绍的`min`、`max`都可以看做是`reduce`的一种实现。
 
-举个栗子：
+reduce方法有三个override的方法：
+
+> Optional<T> reduce(BinaryOperator<T> accumulator);
+
+> T reduce(T identity, BinaryOperator<T> accumulator);
+
+> <U> U reduce(U identity,BiFunction<U, ? super T, U> accumulator,BinaryOperator<U> combiner);
+
+在使用时，我们可以使用Lambada表达式来表示BinaryOperator接口，可以看到reduce方法接受一个函数，这个函数有两个参数，第一个参数是上次函数执行的返回值（也称为中间结果），第二个参数是stream中的元素，这个函数把这两个值相加，得到的和会被赋值给下次执行这个函数的第一个参数。要注意的是：**第一次执行的时候第一个参数的值是Stream的第一个元素，第二个参数是Stream的第二个元素**。这个方法返回值类型是Optional，
 
 ```java
-IntStream is = IntStream.range(0, 10);
-System.out.println(is.reduce(0, Integer::sum));
-
-IntStream intStream = IntStream.range(0, 10);
-System.out.println(intStream.reduce((o1, o2) -> o1 + o2));
-
-Stream<String> stream = Stream.of("Hello", "World", "Jiaming", "Chen");
-System.out.println(stream.reduce("", String::concat));12345678
+public  void test3(){
+    Optional accResult = Stream.of(1, 2, 3, 4)
+            .reduce((acc, item) -> {
+                System.out.println("acc : "  + acc);
+                acc += item;
+                System.out.println("item: " + item);
+                System.out.println("acc+ : "  + acc);
+                System.out.println("--------");
+                return acc;
+            });
+    System.out.println("accResult: " + accResult.get());
+    System.out.println("--------");
+}
 ```
 
-第一个`IntStream`调用的`reduce`方法设置了一个初始值，因此最终`reduce`计算的结果一定有值，该方法调用`Integer`的类方法`sum`用于计算`Stream`的总和。 
-第二个`IntStream`调用`reduce`方法时没有设置初始值，因此最终`reduce`计算的结果不一定有值，所以返回值类型是`Optional`类型，没有提供初始值时会自动将第一个和第二个元素先进行计算，但有可能不存在第一个或第二个元素，因此返回值是`Optional`类型。
+结果：
+
+```java
+acc : 1
+item: 2
+acc+ : 3
+--------
+acc : 3
+item: 3
+acc+ : 6
+--------
+acc : 6
+item: 4
+acc+ : 10
+--------
+accResult: 10
+--------
+```
+
+下面来看第二个变形，与第一种变形相同的是都会接受一个BinaryOperator函数接口，不同的是其会接受一个identity参数，用来指定Stream循环的初始值。如果Stream为空，就直接返回该值。另一方面，该方法不会返回Optional，因为该方法不会出现null。
+
+```java
+int accResult = Stream.of(1, 2, 3, 4)
+            .reduce(0, (acc, item) -> {
+                System.out.println("acc : "  + acc);
+                acc += item;
+                System.out.println("item: " + item);
+                System.out.println("acc+ : "  + acc);
+                System.out.println("--------");
+                return acc;
+            });
+System.out.println("accResult: " + accResult);
+System.out.println("--------");
+```
+
+结果：
+
+```java
+acc : 0
+item: 1
+acc+ : 1
+--------
+acc : 1
+item: 2
+acc+ : 3
+--------
+acc : 3
+item: 3
+acc+ : 6
+--------
+acc : 6
+item: 4
+acc+ : 10
+--------
+accResult: 10
+```
+
+从打印结果可以看出，reduce前两种变形，因为接受参数不同，其执行的操作也有相应变化：
+
+1. 变形1，未定义初始值，从而第一次执行的时候第一个参数的值是Stream的第一个元素，第二个参数是Stream的第二个元素
+2. 变形2，定义了初始值，从而第一次执行的时候第一个参数的值是初始值，第二个参数是Stream的第一个元素
+
+ * count方法
+
+ 获取Stream中元素的个数
