@@ -33,7 +33,7 @@ public class AnnotationTest {
 
 这些类型和它们所支持的类在java.lang.annotation包中可以找到。下面我们看一下每个元注解的作用和相应分参数的使用说明。
 
-###@Target
+### @Target
 
 @Target说明了Annotation所修饰的对象范围：Annotation可被用于 packages、types（类、接口、枚举、Annotation类型）、类型成员（方法、构造方法、成员变量、枚举值）、方法参数和本地变量（如循环变量、catch参数）。在Annotation类型的声明中使用了target可更加明晰其修饰的目标。
 取值(ElementType)有：
@@ -61,7 +61,7 @@ public @interface NoDBColumn {
 
 上述注解Table 可以用于注解类、接口(包括注解类型) 或enum声明,而注解NoDBColumn仅可用于注解类的成员变量。
 
-### @Retention
+### Retention
 
 @Retention 表示需要在什么级别保存该注解信息。可选的RetentionPolicy参数包括：
 
