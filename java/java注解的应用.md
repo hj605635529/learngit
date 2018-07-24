@@ -4,7 +4,7 @@
 
 [TOC]
 
-##java注解介绍
+## java注解介绍
 
 Java注解是附加在代码中的一些元信息，用于编译和运行时进行解析和使用，起到说明、配置的功能。注解不会影响代码的实际逻辑，仅仅起到辅助性的作用。包含在java.lang.annotation包中。注解的定义类似于接口的定义，使用@interface来定义，定义一个方法即为注解类型定义了一个元素，**方法的声明不允许有参数或throw语句，返回值类型被限定为原始数据类型、字符串String、Class、enums、注解类型，或前面这些的数组，方法可以有默认值**。注解并不直接影响代码的语义，但是他可以被看做是程序的工具或者类库。它会反过来对正在运行的程序语义有所影响。注解可以从源文件、class文件或者在运行时通过反射机制多种方式被读取。下面是一个例子：
 
@@ -22,7 +22,7 @@ public class AnnotationTest {
 
 > 注解被编译后的本质就是一个继承Annotation接口的接口，所以@Test其实就是“public interface Test extends Annotation”，当我们通过AnnotationTest.class.getAnnotation(Test.class)调用时，JDK会通过动态代理生成一个实现了Test接口的对象，并把将RuntimeVisibleAnnotations属性值设置进此对象中，此对象即为Test注解对象，通过它的value()方法就可以获取到注解值。
 
-##元注解
+## 元注解
 
 元注解的作用就是负责注解其他注解。Java5.0定义了4个标准的meta-annotation类型，它们被用来提供对其它 annotation类型作说明。Java5.0定义的元注解：
 
@@ -61,7 +61,7 @@ public @interface NoDBColumn {
 
 上述注解Table 可以用于注解类、接口(包括注解类型) 或enum声明,而注解NoDBColumn仅可用于注解类的成员变量。
 
-### Retention
+### @Retention
 
 @Retention 表示需要在什么级别保存该注解信息。可选的RetentionPolicy参数包括：
 
@@ -140,7 +140,7 @@ public @interface Greeting {
 - 参数成员只能用基本类型byte,short,char,int,long,float,double,boolean八种基本数据类型和 String,Enum,Class,annotations等数据类型,以及这一些类型的数组.例如,String value();这里的参数成员就为String;　　
 - 如果**只有一个参数成员,最好把参数名称设为”value”，后加小括号。注解在只有一个元素且该元素的名称是value的情况下，在使用注解的时候可以省略“value=”，直接写需要的值即可**。
 
-##常用的注解
+## 常用的注解
 
 - @Slf4j的作用：如果不想每次都写private  final Logger logger = LoggerFactory.getLogger(XXX.class); 可以用注解@Slf4j
 
