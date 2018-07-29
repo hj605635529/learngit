@@ -2,6 +2,16 @@
 
 [TOC]
 
+## 相关概念
+
+### 线程和进程有何不同？
+
+线程是进程划分成的更小的运行单位。线程和进程最大的不同在于基本上**各进程是独立的，而各线程则不一定**，因为同一进程中的线程极有可能会相互影响。从另一角度来说，进程属于操作系统的范畴，主要是同一段时间内，可以同时执行一个以上的程序，而线程则是在同一程序内几乎同时执行一个以上的程序段。
+
+### 何为多线程？
+
+**多线程就是几乎同时执行多个线程**（一个处理器在某一个时间点上永远都只能是一个线程！即使这个处理器是多核的，除非有多个处理器才能实现多个线程同时运行。）。几乎同时是因为实际上多线程程序中的多个线程实际上是一个线程执行一会然后其他的线程再执行，并不是很多书籍所谓的同时执行。
+
 ## 线程的实现
 
 ### 继承Thread类
@@ -128,7 +138,47 @@ public class Thread3Demo {
 }
 ```
 
-此时启动三个线程实现卖票处理，结果变成了卖各自的票。需要将ticket定义成static，才能实现共享。
+此时启动三个线程实现卖票处理，结果变成了卖各自的票,共享写法如下：
+
+```java
+class Mythread3 extends Thread{
+    private  int ticket = 10; //一共10张票
+
+    @Override
+    public void run(){
+        while (ticket>0){
+            System.out.println("剩下票数："+ticket--);
+        }
+    }
+}
+
+public class Thread3Demo {
+
+    public static void main(String[] args) {
+       Mythread3 mythread3 = new Mythread3();
+
+       new Thread(mythread3).start();
+       new Thread(mythread3).start();
+       new Thread(mythread3).start();
+    }
+
+}
+```
+
+```java
+剩下票数：10
+剩下票数：9
+剩下票数：8
+剩下票数：7
+剩下票数：6
+剩下票数：5
+剩下票数：4
+剩下票数：3
+剩下票数：2
+剩下票数：1
+```
+
+
 
 使用Runnable实现共享
 
@@ -615,7 +665,138 @@ B 线程运行结束!
 main主线程运行结束!
 ```
 
+## 线程优先级
 
+每个线程都具有各自的优先级，线程的优先级可以在程序中表明该线程的重要性，如果有很多线程处于就绪状态，系统会根据优先级来决定首先使哪个线程进入运行状态。但这个并不意味着低 优先级的线程得不到运行，而只是它运行的几率比较小，如垃圾回收机制线程的优先级就比较低。所以很多垃圾得不到及时的回收处理。
+
+线程优先级具有继承特性比如A线程启动B线程，则B线程的优先级和A是一样的。
+
+线程优先级具有随机性也就是说线程优先级高的不一定每一次都先执行完。
+
+Thread类中包含的成员变量代表了线程的某些优先级。如**Thread.MIN_PRIORITY（常数1）**，**Thread.NORM_PRIORITY（常数5）**, **Thread.MAX_PRIORITY（常数10）**。其中每个线程的优先级都在**Thread.MIN_PRIORITY（常数1）** 到**Thread.MAX_PRIORITY（常数10）** 之间，在默认情况下优先级都是**Thread.NORM_PRIORITY（常数5）**。
+
+```java
+class Mythread3 extends Thread{
+    @Override
+    public void run() {
+        System.out.println("MyThread1 run priority=" + this.getPriority());
+        MyThread4 thread4 = new MyThread4();
+        thread4.start();
+    }
+
+}
+
+class MyThread4 extends Thread {
+    @Override
+    public void run() {
+        System.out.println("MyThread2 run priority=" + this.getPriority());
+    }
+}
+
+
+public class Thread3Demo {
+
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("main thread begin priority="
+                + Thread.currentThread().getPriority());
+        Thread.currentThread().setPriority(6);
+        System.out.println("main thread end   priority="
+                + Thread.currentThread().getPriority());
+        Mythread3 thread3 = new Mythread3();
+        thread3.start();
+
+
+    }
+
+}
+```
+
+结果：
+
+```java
+main thread begin priority=5
+main thread end   priority=6
+MyThread1 run priority=6
+MyThread2 run priority=6
+```
+
+## Java多线程分类
+
+### 多线程分类
+
+- 用户线程：运行在前台，执行具体的任务，如程序的主线程、连接网络的子线程等都是用户线程
+- 守护线程：运行在后台，为其他前台线程服务.也可以说守护线程是JVM中非守护线程的 **“佣人”**。
+- 特点：一旦所有用户线程都结束运行，守护线程会随JVM一起结束工作
+- 应用：数据库连接池中的检测线程，JVM虚拟机启动后的检测线程
+- 最常见的守护线程：垃圾回收线程
+
+### 如何设置守护线程
+
+> 可以通过调用Thead类的setDaemon(true)方法设置当前的线程为守护线程
+
+ 注意事项：
+
+- setDaemon(true)必须在start（）方法前执行，否则会抛出IllegalThreadStateException异常 
+- 在守护线程中产生的新线程也是守护线程
+- 不是所有的任务都可以分配给守护线程来执行，比如读写操作或者计算逻辑
+
+ ```java
+class Mythread3 extends Thread{
+    private int i = 0;
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                i++;
+                System.out.println("i=" + (i));
+                Thread.sleep(100);
+            }
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+}
+
+public class Thread3Demo {
+
+    public static void main(String[] args) throws InterruptedException {
+       Mythread3 mythread3 = new Mythread3();
+       mythread3.setDaemon(true);
+       mythread3.start();
+       Thread.sleep(5000);
+        System.out.println("我离开了thread对象再也不打印了，也就是停止了");
+    }
+
+}
+ ```
+
+结果：
+
+```java
+i=44
+i=45
+i=46
+i=47
+i=48
+i=49
+i=50
+我离开了thread对象再也不打印了，也就是停止了
+```
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
 
  
 

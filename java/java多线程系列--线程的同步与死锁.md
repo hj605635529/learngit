@@ -310,6 +310,127 @@ test方法开始结束，当前线程为:Thread-1
 
 **static synchronized⽅法，static⽅法可以直接类名加⽅法名调⽤，⽅法中⽆法使⽤this，所以它锁的不是 this，⽽是类的Class对象，所以，static synchronized⽅法也相当于全局锁，相当于锁住了代码段。**
 
+## 同步不具有继承性
+
+如果父类有一个带synchronized关键字的方法，子类继承并重写了这个方法。
+
+但是同步不能继承，所以还是需要在子类方法中添加synchronized关键字。
+
+## synchronized锁重入
+
+“可重入锁”概念是：自己可以再次获取自己的内部锁。比如一个线程获得了某个对象的锁，此时这个对象锁还没有释放，当其再次想要获取这个对象的锁的时候还是可以获取的，如果不可锁重入的话，就会造成死锁。
+
+```java
+class Service{
+    synchronized public void service1(){
+        System.out.println("service1");
+        service2();
+    }
+
+    synchronized  public void service2(){
+        System.out.println("servier2");
+        service3();
+    }
+
+    synchronized public void service3(){
+        System.out.println("service3");
+    }
+}
+
+class Mythread5 extends Thread{
+
+    @Override
+    public void run(){
+        Service service = new Service();
+        service.service1();
+    }
+}
+
+
+public class Thread3Demo {
+
+    public static void main(String[] args) throws InterruptedException {
+        new Mythread5().start();
+    }
+
+}
+```
+
+结果：
+
+```java
+service1
+servier2
+service3
+```
+
+可重入锁也支持在父子类继承的环境中：
+
+```java
+class Father{
+
+    public int i = 10;
+
+    synchronized public void fatherMethod() throws InterruptedException {
+        i--;
+        System.out.println("father print i = "+i);
+        Thread.sleep(100);
+    }
+
+}
+
+class Son extends  Father{
+    public int i = 10;
+
+    synchronized public void sonMethod() throws InterruptedException {
+       while (i > 0){
+           i--;
+           System.out.println("son print i = "+i);
+           Thread.sleep(100);
+           this.fatherMethod();
+       }
+
+    }
+}
+
+class Mythread5 extends Thread{
+
+    @Override
+    public void run(){
+        Son son = new Son();
+        try {
+            son.sonMethod();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+public class Thread3Demo {
+
+    public static void main(String[] args) throws InterruptedException {
+        new Mythread5().start();
+    }
+
+}
+```
+
+结果：
+
+```java
+son print i = 2
+father print i = 2
+son print i = 1
+father print i = 1
+son print i = 0
+father print i = 0
+```
+
+说明当存在父子类继承关系时，子类是完全可以通过“可重入锁”调用父类的同步方法。
+
+另外出现异常时，其锁持有的锁会自动释放。
+
 ## 死锁
 
 同步的本质在于：⼀个线程等待另外⼀个线程执⾏完毕才可以继续执⾏。但是如果现在相关的⼏ 个线程彼此之间都在等待着，那么就会造成死锁。
@@ -488,5 +609,18 @@ public class TestDemo {
 }
 ```
 
+## 数据类型String的常量池属性
 
+在Jvm中具有String常量池缓存的功能
 
+```java
+String s1 = "a";
+String s2 = "a";
+System.out.println(s1==s2); //true
+```
+
+上面代码输出为true.**这是为什么呢？**
+
+**字符串常量池中的字符串只存在一份！ 即执行完第一行代码后，常量池中已存在 “a”，那么s2不会在常量池中申请新的空间，而是直接把已存在的字符串内存地址返回给s2。**
+
+因为数据类型String的常量池属性，所以synchronized(string)在使用时某些情况下会出现一些问题，比如两个线程运行 synchronized("abc")｛｝和synchronized("abc")｛｝修饰的方法时，这两个线程就会持有相同的锁，导致某一时刻只有一个线程能运行。所以尽量不要使用synchronized(string)而使用synchronized(object)
