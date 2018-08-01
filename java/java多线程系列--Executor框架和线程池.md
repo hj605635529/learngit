@@ -365,3 +365,60 @@ static final int TERMINATED = 3; //终止，终结
  3，**如果调用了shutdownNow()方法，则线程池处于STOP状态**，此时线程池不能接受新的任务，并且会去尝试终止正在执行的任务，返回没有执行的任务列表；
 
  4，当**线程池处于SHUTDOWN或STOP状态，并且所有工作线程已经销毁，任务缓存队列已经清空或执行结束后，线程池被设置为TERMINATED状态**。
+
+###  ScheduledThreadPoolExecutor类
+
+ScheduledThreadPoolExecutor主要用来在给定的延迟后运行任务，或者定期执行任务。
+ScheduledThreadPoolExecutor使用的任务队列DelayQueue封装了一个PriorityQueue，PriorityQueue会对队列中的任务进行排序，执行所需时间短的放在前面先被执行(ScheduledFutureTask的time变量小的先执行)，如果执行所需时间相同则先提交的任务将被先执行(ScheduledFutureTask的squenceNumber变量小的先执行)
+
+ **ScheduledThreadPoolExecutor运行机制**
+
+![选区_246.png](https://i.loli.net/2018/08/01/5b61b4a31127b.png)
+
+ 
+
+**ScheduledThreadPoolExecutor的执行主要分为两大部分：** 
+
+1. 当调用ScheduledThreadPoolExecutor的 **scheduleAtFixedRate()** 方法或者**scheduleWirhFixedDelay()** 方法时，会向ScheduledThreadPoolExecutor的 **DelayQueue** 添加一个实现了 **RunnableScheduledFutur** 接口的 **ScheduledFutureTask** 。
+2. 线程池中的线程从DelayQueue中获取ScheduledFutureTask，然后执行任务。
+
+**ScheduledThreadPoolExecutor为了实现周期性的执行任务，对ThreadPoolExecutor做了如下修改：**
+
+- 使用 **DelayQueue** 作为任务队列；
+- 获取任务的方不同
+- 执行周期任务后，增加了额外的处理
+
+**ScheduledThreadPoolExecutor执行周期任务的步骤**
+
+![选区_247.png](https://i.loli.net/2018/08/01/5b61b63f01cbe.png)
+
+1. 线程1从DelayQueue中获取已到期的ScheduledFutureTask（DelayQueue.take()）。到期任务是指ScheduledFutureTask的time大于等于当前系统的时间；
+2. 线程1执行这个ScheduledFutureTask；
+3. 线程1修改ScheduledFutureTask的time变量为下次将要被执行的时间；
+4. 线程1把这个修改time之后的ScheduledFutureTask放回DelayQueue中（DelayQueue.add())。
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 

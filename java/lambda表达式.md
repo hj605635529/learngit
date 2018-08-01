@@ -197,9 +197,26 @@ public interface Consumer<T>{
 
     void accept(T t);
 
+     default Consumer<T> andThen(Consumer<? super T> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> { accept(t); after.accept(t); };
 }
 
 ```
+注：很多人肯定会对andThen函数疑惑，其实这个函数做的一个链式访问，如果要写成一般的函数应该是下面的形式：
+
+```java
+ default Consumer<T> andThen(Consumer<? super T> after) {
+        Objects.requireNonNull(after);
+        return new Consumer(
+        	@Override
+            void accept(T t){
+                this.accept(t);
+                after.accept(t);
+            }
+        )
+```
+
 Function
 
 ```java
@@ -209,7 +226,6 @@ package java.util.function;
 public interface Function<T, R>{
     R apply(T t);
 }
+
 ```
-
-
 
