@@ -640,3 +640,12 @@ void transfer(Entry[] newTable, boolean rehash) {
 下面stackoverflow给出一个解释：
 
 https://stackoverflow.com/questions/2945309/what-is-the-use-of-adding-a-null-key-or-value-to-a-hashmap-in-java
+
+
+
+
+
+```JAVA
+
+```
+
