@@ -74,6 +74,8 @@ System.out.println(date2);
 ```java
 //1.将字符串格式转换成DateTime格式， 注意这里是DateTimeFormat不是DateTimeFormatter
 DateTime parse = DateTime.parse("2018-08-26", DateTimeFormat.forPattern("yyyy-MM-dd"));
+//2.这个也能转换
+DateTime fromDate = DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(fromDateStr);
 System.out.println(parse);
 ```
 
@@ -167,3 +169,6 @@ DateTime date3 = DateTime.parse("2017-09-23", DateTimeFormat.forPattern("yyyy-MM
 Interval interval = new Interval(date2, date1);
 System.out.println(interval.contains(date3)); // true      左闭右开区间
 ```
+
+
+spliterator
