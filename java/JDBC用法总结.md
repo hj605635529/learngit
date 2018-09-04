@@ -206,5 +206,45 @@ public Integer batchInsertSnachHotel(Collection<LmHotel> lmHotels) {
 }
 ```
 
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<style type="text/css">
+   .table{font-size:12px;}
+</style>
+
+<script type="text/javascript">
+</script>
+
+<!-- 验证还是jquery-validation好用，这里省事没用 -->
+<form id="warnPopForm" method="post" style="margin:0;text-align:center">
+<%--<form id="warnPopForm" method="post" style="margin:0;text-align:center;overflow:hidden">--%>
+    <table class="table" width="100%" border="0px">
+      <!-- 隐藏域，否则更新的时候读不到这些值 -->
+      <input type="hidden" name="id">
+      <tr>
+         <td width="100%" align="left">
+                <%--
+            <textarea name="invalid_str" id="invalid_str" readonly="readonly" style="width:99%;overflow-y:hidden" rows="10">
+                --%>
+                <textarea name="invalid_str" id="invalid_str" readonly="readonly" style="width:99%" rows="8">
+
+            </textarea>
+         </td>
+      </tr>
+      <tr>
+         <td colspan="2" align="center">
+            <a href="#" id="btn-back" onclick="closeWarnPopWindow();" class="easyui-linkbutton">关闭</a>
+         </td>
+      </tr>
+   </table>
+</form>
+```
+
+
+
+```
+String key = TuiguangConstant.CACHE_PRE + MemcacheConfig.getConditionByKey(Constants.CONDITION) + "/"
+        + context.getTuiguangStrategy().name() + "/" + cityURL;
+```
 
