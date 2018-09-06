@@ -52,10 +52,17 @@ INSERT INTO mobrank.hotel_promotion_rules (id, log_day, hotel_seq, city_url, sta
 
 4.如果想要保存一部分的数据，可以使用类似`SELECT * FROM hotel_promotion_rules LIMIT 0, 20;`查询出来后再保存成sql语句。
 
-
+![选区_427.png](https://i.loli.net/2018/09/06/5b911e8e00c76.png)
 
 ## 3.idea 如何使用git 操作
 
 
 
 https://blog.csdn.net/autfish/article/details/52513465
+
+
+
+## idea快捷建
+
+- alt+f8 可以查看要搜变量
+
