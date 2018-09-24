@@ -698,8 +698,8 @@ StringUtils 方法的操作对象是 java.lang.String 类型的对象，是 JDK 
       List list = new ArrayList();
       int sizePlus1 = 1;
       int i = 0, start = 0;
-      boolean match = false;
-      boolean lastMatch = false;
+      boolean match = false;  //当字符不是分割符时，为true
+      boolean lastMatch = false; //当字符是分割符号，且上一个字符不是分割符时为true
       if (separatorChars == null) {
           // Null separator means use whitespace
           while (i < len) {
@@ -720,7 +720,7 @@ StringUtils 方法的操作对象是 java.lang.String 类型的对象，是 JDK 
               match = true;
               i++;
           }
-      } else if (separatorChars.length() == 1) {
+      } else if (separatorChars.length() == 1) {  //当分割符就是一个字符时
           // Optimise 1 character case
           char sep = separatorChars.charAt(0);
           while (i < len) {
@@ -741,7 +741,7 @@ StringUtils 方法的操作对象是 java.lang.String 类型的对象，是 JDK 
               match = true;
               i++;
           }
-      } else {
+      } else {                     //分割符是多于一个字符的字符串
           // standard case
           while (i < len) {
               if (separatorChars.indexOf(str.charAt(i)) >= 0) {
@@ -762,7 +762,7 @@ StringUtils 方法的操作对象是 java.lang.String 类型的对象，是 JDK 
               i++;
           }
       }
-      if (match || (preserveAllTokens && lastMatch)) {
+      if (match || (preserveAllTokens && lastMatch)) { 
           list.add(str.substring(start, i));
       }
       return (String[]) list.toArray(new String[list.size()]);
