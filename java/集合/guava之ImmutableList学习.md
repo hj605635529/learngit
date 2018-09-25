@@ -45,7 +45,40 @@ immutable集合都是抽象类可以有以下几种方式来创建：
 
 ## 6.源码剖析
 
-### 1.copyof方法源码分析
+### 1.of方法
+
+```
+@Test
+public void test3(){
+   ImmutableList<Integer> of = ImmutableList.of(1, 2, 3);
+   System.out.println(of);
+}
+```
+
+结果：
+
+[1, 2, 3]
+
+源码：
+
+```java
+/**
+ * Returns an immutable list containing the given elements, in order.
+ *
+ * @throws NullPointerException if any element is null
+ */
+public static <E> ImmutableList<E> of(E e1, E e2, E e3) {
+  return construct(e1, e2, e3);
+}
+
+ private static <E> ImmutableList<E> construct(Object... elements) {
+    return asImmutableList(checkElementsNotNull(elements)); //和copyof方法类似
+  }
+
+
+```
+
+### 2.copyof方法源码分析
 
 ```java
   @Test
@@ -59,7 +92,7 @@ immutable集合都是抽象类可以有以下几种方式来创建：
 		numbers.add(0, -1);
 
 		System.out.println(integers1);
-		System.out.println(integers2);
+		System.out.println(integers2);//对比jdk中的unmodifiable集合，发现这个才是真正的实现了不可变
 		System.out.println(integers3);
 
     }
@@ -160,7 +193,7 @@ class RegularImmutableList<E> extends ImmutableList<E> {
 ```
 **总结下copyof方法，能发现其实这个不可变集合内部没有创建内存，都是引用了原来的内存。**
 
-### 2.Builder类构建Immutable集合
+### 3.Builder类构建Immutable集合
 
 ```java
 @Test

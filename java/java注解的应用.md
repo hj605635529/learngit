@@ -48,7 +48,7 @@ public class AnnotationTest {
 
 使用实例：
 
-```
+```JAVA
 @Target(ElementType.TYPE)
 public @interface Table {
     public String tableName() default "className";
@@ -71,7 +71,7 @@ public @interface NoDBColumn {
 
 Retention meta-annotation类型有唯一的value作为成员，它的取值来自java.lang.annotation.RetentionPolicy的枚举类型值。具体实例如下：
 
-```
+```JAVA
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
@@ -89,7 +89,7 @@ Column注解的的RetentionPolicy的属性值是RUTIME,这样注解处理器可�
 @Documented 表示含有该注解类型的元素(带有注释的)会通过javadoc或类似工具进行文档化，Documented是一个标记注解（类似@Override 这种只需要一个简单的声明即可的注解即为标记注解），没有成员。该类型应用于注解那些影响客户使用带注释(comment)的元素声明的类型。如果类型声明是用@Documented 来注解的，这种类型的注解被作为被标注的程序成员的公共API。
 实例如下：
 
-```
+```JAVA
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -150,6 +150,7 @@ public @interface Greeting {
 
 - @SuppressWarnings   阻止警告的意思。之前说过调用被 @Deprecated 注解的方法后，编译器会警告提醒，而有时候开发者会忽略这种警告，他们可以在调用的地方通过 @SuppressWarnings 达到目的。
 - @FunctionalInterfac    函数式接口注解，接口只能有一个抽象的方法，比如Runable接口，如果有两个抽象方法，会报错。这个是 Java 1.8 版本引入的新特性。函数式编程很火，所以 Java 8 也及时添加了这个特性。
+- 
 
 
 
