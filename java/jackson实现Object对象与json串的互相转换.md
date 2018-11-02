@@ -16,7 +16,7 @@
     <version>2.4.0</version>
 </dependency>
 <dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
+    <groupId>com.fasterxml.core</groupId>
     <artifactId>jackson-core</artifactId>
     <version>2.4.2</version>
 </dependency>
