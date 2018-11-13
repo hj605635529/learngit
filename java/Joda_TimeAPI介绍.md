@@ -72,11 +72,16 @@ System.out.println(date2);
  ### 4.2  将字符串格式转换成DateTime格式
 
 ```java
-//1.将字符串格式转换成DateTime格式， 注意这里是DateTimeFormat不是DateTimeFormatter
+//1.将字符串格式转换成DateTime格式， 注意这里是DateTimeFormat.forPattern不是DateTimeFormatter
 DateTime parse = DateTime.parse("2018-08-26", DateTimeFormat.forPattern("yyyy-MM-dd"));
 //2.这个也能转换
 DateTime fromDate = DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(fromDateStr);
 System.out.println(parse);
+
+//3.yyyyMMdd格式转换成yyyy-MM-dd格式
+ DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
+ DateTime startTime = DateTime.parse("20181108", formatter);
+ System.out.println(startTime.toString("yyyy-MM-dd"));
 ```
 
 ### 4.3 将DateTime按照某种格式输出
