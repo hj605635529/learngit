@@ -48,7 +48,7 @@ svn历史库存在中央仓库，每次对比与提交代码都必须连接到�
 
 默认安装下git会将中文文件名进行转码:
 
-![image-20181114012652602](https://ws4.sinaimg.cn/large/006tNbRwly1fx6y5ufmj1j31ja0p27d9.jpg)
+![image-20181114012652602](https://ws1.sinaimg.cn/large/006tNbRwly1fx6yaq6qbjj31ja0p2n6o.jpg)
 
 方法：
 
