@@ -47,7 +47,7 @@ chmod 777 /usr/local/bin/iterm2-*
 
 如图：
 
-![image-20181114002706475](../../Library/Application Support/typora-user-images/image-20181114002706475.png)
+![image-20181114002706475](https://ws2.sinaimg.cn/large/006tNbRwly1fx6wvvrqqdj31jy10s0zv.jpg)
 
 ### 5.在Triggers选项中，新建两个triggers
 
@@ -71,7 +71,7 @@ Instant: checked
 
 如下图：
 
-![image-20181114003131568](../../Library/Application Support/typora-user-images/image-20181114003131568.png)
+![image-20181114003131568](https://ws3.sinaimg.cn/large/006tNbRwly1fx6ww44uxaj31jw0qq7bh.jpg)
 
 
 
