@@ -32,6 +32,7 @@ public class Interceptor implements MethodInterceptor {
 	public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
 		System.out.println("before intercept.......");
 		methodProxy.invokeSuper(o, objects);
+      //  methodProxy.invoke(o, objects);   //死循环，下面分析原因
 		System.out.println("after intercept........");
 		return null;
 	}
@@ -195,7 +196,7 @@ public class Target$$EnhancerByCGLIB$$f64c12a7 extends Target implements Factory
  
 ```
 
-在CGLIB $SET_THREAD_CALLBACKS方法中调用了CGLIB$THREAD_CALLBACKS的set方法来保存拦截对象，在CGLIB$BIND_CALLBACKS方法中使用了CGLIB$THREAD_CALLBACKS的get方法来获取拦截对象，并保存到CGLIB$CALLBACK_0中。这样，在我们调用代理类的g方法时，就可以获取到我们设置的拦截对象，然后通过  *tmp4_1.intercept(this, CGLIB$g$0$Method, CGLIB$emptyArgs, CGLIB$g$0$Proxy)*  来实现代理。
+在CGLIB $SET_THREAD_CALLBACKS方法中调用了CGLIB​$THREAD_CALLBACKS的set方法来保存拦截对象，在CGLIB$BIND_CALLBACKS方法中使用了CGLIB​$THREAD_CALLBACKS的get方法来获取拦截对象，并保存到CGLIB$CALLBACK_0中。这样，在我们调用代理类的sayhelllo()方法时，就可以获取到我们设置的拦截对象，然后通过  *var10000.intercept(this, CGLIB​$g$0​$Method, CGLIB$emptyArgs, CGLIB​$g$0​$Proxy)*  来实现代理。
 
 接下来让我们看看拦截对象中intercept方法：
 
@@ -215,7 +216,13 @@ invokeSuper()方法：
 
 > 上面代码调用过程就是获取到代理类对应的FastClass，并执行了代理方法。还记得之前生成三个class文件吗？Target$$EnhancerByCGLIB$$f64c12a7$$FastClassByCGLIB$$98e48c91.class就是代理类的FastClass，Target$$FastClassByCGLIB$$d3bf33eb.class就是被代理类的FastClass。
 
+**为啥调用MethodProxy.invoke()方法会死循环？**
 
+![选区_747.png](https://i.loli.net/2018/12/27/5c23a68b0e363.png)
+
+看代码中我们知道这调用的被代理类的fastclass中的invoke方法
+
+![选区_748.png](https://i.loli.net/2018/12/27/5c23a7a483a3c.png)
 
 ## 3.Fastclass机制分析
 
