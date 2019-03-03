@@ -89,6 +89,10 @@ https://www.cnblogs.com/annsshadow/p/5037667.html
 
 > mysql自动会做类型转换，然后就回到第二条上了，在索引列上做操作导致索引失效。
 
+- 那么在什么情况下能使用到覆盖索引呢？
+
+>  where 条件 满足索引条件，必须所有条件都满足，select 查询的列必须也在索引上。 覆盖索引既索引上覆盖了select字段数据，查询时只要读取索引而无需访问数据行即可获得所有数据的索引
+
 ### 2.5 事务的隔离级别
 
 ![选区_784.png](https://i.loli.net/2019/03/04/5c7c04ce4985d.png)
@@ -160,3 +164,7 @@ select * from user limit 10000, 10  这个做法的实现是全表扫描，取�
 ## 3. 数据结构软件：
 
 https://www.cs.usfca.edu/~galles/visualization/Algorithms.html
+
+## 4.案例分析
+
+·[MySQL SQL优化之覆盖索引]   https://my.oschina.net/loujinhe/blog/1528233
