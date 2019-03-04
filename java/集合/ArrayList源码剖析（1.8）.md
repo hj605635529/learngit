@@ -42,18 +42,18 @@ public class ArrayList<E> extends AbstractList<E>
 
 /**
  * 这是一个共享的空的数组实例，当使用 ArrayList(0) 或者 ArrayList(Collection<? extends E> c) 
- * 并且 c.size() = 0 的时候讲 elementData 数组讲指向这个实例对象。
+ * 并且 c.size() = 0 的时候将 elementData 数组讲指向这个实例对象。
  */
  private static final Object[] EMPTY_ELEMENTDATA = {};
 
 /**
- * 另一个共享空数组实例，再第一次 add 元素的时候将使用它来判断数组大小是否设置为 DEFAULT_CAPACITY
+ * 另一个共享空数组实例，在第一次 add 元素的时候将使用它来判断数组大小是否设置为 DEFAULT_CAPACITY
  */
  private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
 
 /**
  * 真正装载集合元素的底层数组 
- *transient是Java语言的关键字，用来表示一个域不是该对象串行化的一部分。当一个对象被串行化的时候，transient型变量的值不包括在串行化的表示中，然而非transient型的变量是被包括进去的。
+ *transient是Java语言的关键字，用来表示一个域不是该对象序列化的一部分。当一个对象被序列化的时候，transient型变量的值不包括在序列化的表示中，然而非transient型的变量是被包括进去的。
  */
 transient Object[] elementData; // non-private to simplify nested class access
 ```

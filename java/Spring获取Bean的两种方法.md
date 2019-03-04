@@ -9,3 +9,4 @@
 ## 总结
 
 ApplicationContext.getBean比较适合没有单例注解的类中使用，比如某个工具类要使用spring托管的某个类的方法，就可以通过这个来获取
+

@@ -21,7 +21,7 @@ public class LinkedList<E>
     implements List<E>, Deque<E>, Cloneable, java.io.Serializable
 ```
 
-- LinkedList 是一个继承于AbstractSequentialList的**双向链表**。它也可以被当作堆栈、队列或双端队列进行操作。
+- LinkedList 是一个继承于AbstractSequentialList的**双向链表**。（在1.6中是双向循环链表， 1.7之后就变成了双向链表了）它也可以被当作堆栈、队列或双端队列进行操作。
 - LinkedList 实现 List 接口，能对它进行队列操作。
 - LinkedList 实现 Deque 接口，即能将LinkedList当作双端队列使用。
 - LinkedList 实现了Cloneable接口，即覆盖了函数clone()，能克隆。

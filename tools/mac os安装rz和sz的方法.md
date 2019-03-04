@@ -47,7 +47,7 @@ chmod 777 /usr/local/bin/iterm2-*
 
 如图：
 
-![image-20181114002706475](https://ws2.sinaimg.cn/large/006tNbRwly1fx6wvvrqqdj31jy10s0zv.jpg)
+![image-20181114002706475](https://ws4.sinaimg.cn/large/006tNbRwly1fx6x7iu58mj31jy10s45n.jpg)
 
 ### 5.在Triggers选项中，新建两个triggers
 

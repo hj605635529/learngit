@@ -156,6 +156,47 @@ https://www.zhihu.com/question/35164211
 
 
 
+ ###  Java虚拟机JVM之server模式与client模式的区别
+
+JVM Server模式下应用启动慢但运行速度快，JVM Client模式下应用启动快但运行速度要慢些，推荐：服务器上请以Server模式运行，面客户端或GUI模式下就以Client模式运行
+
+-Server模式启动时，速度较慢，但是一旦运行起来后，性能将会有很大的提升，原因是：当虚拟机在-Client模式的时候，使用的是一个代号为C1的轻量级编译器，而-Server模式启动的虚拟机采用相对重量级代号为C2的编译器，C2比C1编译器编译的相对彻底，服务起来之后，性能高。
+
+https://www.jb51.net/article/129592.htm
+
+### 多CPU和多核CPU有什么区别
+
+```java
+双核心是在一个处理器里拥有两个处理器核心，核心是两个，但是其他硬件还都是两个核心在共同拥有，而双CPU则是真正意义上的双核心，不光是处理器核心是两个，其他例如缓存等硬件配置也都是双份的。
+```
+
+https://blog.csdn.net/qingkongyeyue/article/details/73513060
+
+
+
+
+
+
+
+![image-20190217135230700](https://ws4.sinaimg.cn/large/006tKfTcly1g09dkwhuncj30s8055759.jpg)
+
+
+方法区：
+
+- 运行时常量池  （StringTable： HashSet实现） 
+- 
+
+
+
+
+
+### 对象分配：
+
+对象分配时，优先在eden区分配，当eden区空间不足时，触发一次minor gc。minor gc会标记eden区及from survivor区中不可以回收的对象，准备放入to survivor区。 
+
+1.当to survivor区空间足够时，将标记的回收对象复制过去，然后清空eden和from survivor区，然后判断新对象是否能在eden上分配，如果可以，就直接分配，如果不行，这里我就不清楚了 需要做个实验才知道 
+
+2.当eden和from survivor中存活对象，在to survivor中放不下时，需要利用担保机制，将这些对象直接放到老年代。然后再在eden上分配对象
 
 
 
@@ -167,12 +208,59 @@ https://www.zhihu.com/question/35164211
 
 
 
+![image-20190218111743454](https://ws1.sinaimg.cn/large/006tKfTcly1g0aeq5np87j31aj0ostcy.jpg)
 
 
 
 
 
+```java
+@Override
+public void process(ProcessContext context) {
+    Map<String, WrapperPrice> originalPrices = context.getHotelPriceDetail().getOriginalPrices();
+    if (MapUtils.isEmpty(originalPrices)) {
+        return;
+    }
+    boolean seen = false;
+    List<RoomPriceInfo> acc = null;
+    for (Map.Entry<String, WrapperPrice> stringWrapperPriceEntry : originalPrices.entrySet()) {
+        if (Objects.nonNull(stringWrapperPriceEntry) && Objects.nonNull(stringWrapperPriceEntry.getValue())) {
+            if (priceFilterRuleService.isNotFilterWrapper(context, stringWrapperPriceEntry.getValue())) {
+                List<RoomPriceInfo> hotelPriceInfos = getHotelPriceInfos(context, stringWrapperPriceEntry.getValue());
+                if (CollectionUtils.isNotEmpty(hotelPriceInfos)) {
+                    if (!seen) {
+                        seen = true;
+                        acc = hotelPriceInfos;
+                    } else {
+                        acc = ListUtils.sum(acc, hotelPriceInfos);
+                    }
+                }
+            }
+        }
+    }
+    (seen ? Optional.of(acc) : Optional.<List<RoomPriceInfo>>empty())
+            .ifPresent(o -> context.getHotelPriceInfo().getMobilePrices().addAll(o));
+}
+```
 
+lambda表达式的好处：filter就相当于if判断
+
+```java
+@Override
+public void process(ProcessContext context) {
+    Map<String, WrapperPrice> originalPrices = context.getHotelPriceDetail().getOriginalPrices();
+    if (MapUtils.isEmpty(originalPrices)) {
+        return;
+    }
+    originalPrices.entrySet().stream()
+            .filter(o -> Objects.nonNull(o) && Objects.nonNull(o.getValue()))
+            .filter(o -> priceFilterRuleService.isNotFilterWrapper(context, o.getValue()))
+            .map(o -> getHotelPriceInfos(context, o.getValue()))
+            .filter(CollectionUtils::isNotEmpty)
+            .reduce(ListUtils::sum)
+            .ifPresent(o -> context.getHotelPriceInfo().getMobilePrices().addAll(o));
+}
+```
 
 
 

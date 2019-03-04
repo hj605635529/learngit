@@ -150,7 +150,7 @@ DateTime date1 = DateTime.parse("2018-08-26", DateTimeFormat.forPattern("yyyy-MM
 //当前时间加上10天
 DateTime dateTime1 = date1.plusDays(10);
 System.out.println(dateTime1);
-//当前时间加上1个月
+//当前时间加上1个月, -1表示上一个月
 DateTime dateTime2 = date1.plusMonths(1);
 System.out.println(dateTime2);
 ```

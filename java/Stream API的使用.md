@@ -300,3 +300,200 @@ accResult: 10
  * count方法
 
  获取Stream中元素的个数
+
+
+
+- Collections.toMap
+
+介绍
+
+```java
+ /**
+     * Returns a {@code Collector} that accumulates elements into a
+     * {@code Map} whose keys and values are the result of applying the provided
+     * mapping functions to the input elements.
+     *
+     * <p>If the mapped keys contains duplicates (according to
+     * {@link Object#equals(Object)}), an {@code IllegalStateException} is
+     * thrown when the collection operation is performed.  If the mapped keys
+     * may have duplicates, use {@link #toMap(Function, Function, BinaryOperator)}
+     * instead.
+     *
+     * @apiNote
+     * It is common for either the key or the value to be the input elements.
+     * In this case, the utility method
+     * {@link java.util.function.Function#identity()} may be helpful.
+     * For example, the following produces a {@code Map} mapping
+     * students to their grade point average:
+     * <pre>{@code
+     *     Map<Student, Double> studentToGPA
+     *         students.stream().collect(toMap(Functions.identity(),
+     *                                         student -> computeGPA(student)));
+     * }</pre>
+     * And the following produces a {@code Map} mapping a unique identifier to
+     * students:
+     * <pre>{@code
+     *     Map<String, Student> studentIdToStudent
+     *         students.stream().collect(toMap(Student::getId,
+     *                                         Functions.identity());
+     * }</pre> 
+* The returned {@code Collector} is not concurrent.  For parallel stream
+ * pipelines, the {@code combiner} function operates by merging the keys
+ * from one map into another, which can be an expensive operation.  If it is
+ * not required that results are inserted into the {@code Map} in encounter
+ * order, using {@link #toConcurrentMap(Function, Function)}
+ * may offer better parallel performance.
+ *
+ * @param <T> the type of the input elements
+ * @param <K> the output type of the key mapping function
+ * @param <U> the output type of the value mapping function
+ * @param keyMapper a mapping function to produce keys
+ * @param valueMapper a mapping function to produce values
+ * @return a {@code Collector} which collects elements into a {@code Map}
+ * whose keys and values are the result of applying mapping functions to
+ * the input elements
+ *
+ * @see #toMap(Function, Function, BinaryOperator)
+ * @see #toMap(Function, Function, BinaryOperator, Supplier)
+ * @see #toConcurrentMap(Function, Function)
+ */
+public static <T, K, U>
+Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
+                                Function<? super T, ? extends U> valueMapper) {
+    return toMap(keyMapper, valueMapper, throwingMerger(), HashMap::new);
+}
+
+
+
+
+
+
+  /**
+     * Returns a {@code Collector} that accumulates elements into a
+     * {@code Map} whose keys and values are the result of applying the provided
+     * mapping functions to the input elements.
+     *
+     * <p>If the mapped
+     * keys contains duplicates (according to {@link Object#equals(Object)}),
+     * the value mapping function is applied to each equal element, and the
+     * results are merged using the provided merging function.
+     *
+     * @apiNote
+     * There are multiple ways to deal with collisions between multiple elements
+     * mapping to the same key.  The other forms of {@code toMap} simply use
+     * a merge function that throws unconditionally, but you can easily write
+     * more flexible merge policies.  For example, if you have a stream
+     * of {@code Person}, and you want to produce a "phone book" mapping name to
+     * address, but it is possible that two persons have the same name, you can
+     * do as follows to gracefully deals with these collisions, and produce a
+     * {@code Map} mapping names to a concatenated list of addresses:
+     * <pre>{@code
+     *     Map<String, String> phoneBook
+     *         people.stream().collect(toMap(Person::getName,
+     *                                       Person::getAddress,
+     *                                       (s, a) -> s + ", " + a));
+     * }</pre>
+     *
+     * @implNote
+     * The returned {@code Collector} is not concurrent.  For parallel stream
+     * pipelines, the {@code combiner} function operates by merging the keys
+     * from one map into another, which can be an expensive operation.  If it is
+     * not required that results are merged into the {@code Map} in encounter
+     * order, using {@link #toConcurrentMap(Function, Function, BinaryOperator)}
+     * may offer better parallel performance.
+     *
+     * @param <T> the type of the input elements
+     * @param <K> the output type of the key mapping function
+     * @param <U> the output type of the value mapping function
+     * @param keyMapper a mapping function to produce keys
+     * @param valueMapper a mapping function to produce values
+     * @param mergeFunction a merge function, used to resolve collisions between
+     *                      values associated with the same key, as supplied
+     *                      to {@link Map#merge(Object, Object, BiFunction)}
+     * @return a {@code Collector} which collects elements into a {@code Map}
+     * whose keys are the result of applying a key mapping function to the input
+     * elements, and whose values are the result of applying a value mapping
+     * function to all input elements equal to the key and combining them
+     * using the merge function
+     *
+     * @see #toMap(Function, Function)
+     * @see #toMap(Function, Function, BinaryOperator, Supplier)
+     * @see #toConcurrentMap(Function, Function, BinaryOperator)
+     */
+    public static <T, K, U>
+    Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
+                                    Function<? super T, ? extends U> valueMapper,
+                                    BinaryOperator<U> mergeFunction) {
+        return toMap(keyMapper, valueMapper, mergeFunction, HashMap::new);
+    }
+
+
+
+```
+
+```java
+//传统java写法
+
+Map<String, Integer> resultMap = new HashMap<>();
+for (HotelItem hotelItem : result) {
+    if (resultMap.put(hotelItem.hotelSEQ, hotelItem.mobileMinAvailablePrice) != null) {
+        throw new IllegalStateException("Duplicate key");
+    }
+}
+
+//JAVA8 Stream流的应用
+ Map<String, Integer> resultMap = result.stream().collect(Collectors.toMap(hotelItem -> hotelItem.hotelSEQ, hotelItem -> hotelItem.mobileMinAvailablePrice));
+
+//总结一下：
+//使用Collectors.toMap方法时的两个问题： 
+//1、当key重复时，会抛出异常：java.lang.IllegalStateException: Duplicate key 
+//2、当value为null时，会抛出异常：java.lang.NullPointerException
+
+
+
+
+
+---------------------------------------------------------------------------------------
+
+Map<String, Integer> resultMap = Maps.newHashMap();
+    for (HotelItem hotelItem : result){
+          resultMap.put(hotelItem.hotelSEQ, hotelItem.mobileMinAvailablePrice);
+     }
+
+
+//遇到重复的key就使用后者替换，而且HashMap的value可以是null
+  Map<String, Integer> resultMap = result.stream().collect(Collectors.toMap(hotelItem -> hotelItem.hotelSEQ, hotelItem -> hotelItem.mobileMinAvailablePrice, (a, b) -> b));
+
+
+//lambda表达式
+  Map<String, Integer> resultMap = new HashMap<>();
+            for (HotelItem hotelItem : result) {
+                resultMap.merge(hotelItem.hotelSEQ, hotelItem.mobileMinAvailablePrice, new BinaryOperator<Integer>() {
+                    @Override
+                    public Integer apply(Integer a, Integer b) {
+                        return b;
+                    }
+                });
+            }
+
+    default V merge(K key, V value,
+            BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+        Objects.requireNonNull(remappingFunction);
+        Objects.requireNonNull(value);
+        V oldValue = get(key);
+        V newValue = (oldValue == null) ? value :
+                   remappingFunction.apply(oldValue, value);
+        if(newValue == null) {
+            remove(key);
+        } else {
+            put(key, newValue);
+        }
+        return newValue;
+    }
+
+```
+
+
+
+
+

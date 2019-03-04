@@ -779,3 +779,26 @@ StringUtils 方法的操作对象是 java.lang.String 类型的对象，是 JDK 
 > - 判断两个字符串相等是比较常用的方法了，用StringUtils.equals可以避免空指针异常。
 > - trimToNull和trimToEmpty是经常用到的方法，用来处理参数url带来的字符串。
 > - 我们平时进行简单的字符串分割的时候，尽量不要用String自身的split方法，它是匹配正则表达式的，如果遇到$这种特殊字符，需要转义一下。用StringUtils.split()方法会更方便 ,它就是匹配字符串的。
+
+## 5.补充
+
+```java
+/**
+ *两种replaceLast的实现方式
+ */
+public static String replaceLast(String text, String regex, String replacement) {
+    return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
+}
+
+public static String replaceLast2(String string, String toReplace, String replacement) {
+    int pos = string.lastIndexOf(toReplace);
+    if (pos > -1) {
+        return string.substring(0, pos)
+                + replacement
+                + string.substring(pos + toReplace.length(), string.length());
+    } else {
+        return string;
+    }
+}
+```
+
