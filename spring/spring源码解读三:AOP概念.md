@@ -11,7 +11,7 @@
 ### 1.1什么是 AOP
 
 AOP(Aspect-Oriented Programming), 即 **面向切面编程**, 它与 OOP( Object-Oriented Programming, 面向对象编程) 相辅相成, 提供了与 OOP 不同的抽象软件结构的视角.
-在 OOP 中, 我们以类(class)作为我们的基本单元, 而 AOP 中的基本单元是 **Aspect(切面)**
+在 OOP 中, 我们以类(class)作为我们的基本单元, 而 AOP 中的基本单元是 **Aspect(切面)**,AOP存在的意义就是解耦。
 
 ### 1.2术语
 
@@ -66,7 +66,7 @@ Advice 是和特定的 point cut 关联的, 并且在 point cut 相匹配的 joi
 
 #### 1.2.9织入(Weaving)
 
-将 aspect 和其他对象连接起来, 并创建 adviced object 的过程.
+将 aspect 和其他对象连接起来, 并创建 adviced object 的过程. 
 根据不同的实现技术, AOP织入有三种方式:
 
 - 编译器织入, 这要求有特殊的Java编译器.
@@ -125,3 +125,36 @@ factory里得到bean的方法就是getProxy()方法， 先等我们IOC容器启�
 
 [1]: https://segmentfault.com/a/1190000007469968	"彻底征服 Spring AOP 之 理论篇"
 
+
+
+
+
+![选区_794.png](https://i.loli.net/2019/03/05/5c7e22d064c8c.png)
+
+aop到底能干啥？
+
+权限认证
+
+缓存
+
+调式
+
+Logging 日志
+
+事务管理
+
+监听
+
+拦截器
+
+监听的缓存结果， 第一次调用的时候，就把结果存到缓存中，第二次调用的时候，就不用调用那个实际的函数，直接调用before就返回出去了。 用before去判断有没有缓存， 没有执行， 有的话不执行
+
+
+
+![选区_795.png](https://i.loli.net/2019/03/05/5c7e4f1019f7d.png)
+
+![选区_796.png](https://i.loli.net/2019/03/05/5c7e515fd2e16.png)
+
+![选区_797.png](https://i.loli.net/2019/03/05/5c7e51a6abfbb.png)
+
+![选区_798.png](https://i.loli.net/2019/03/05/5c7e522ea2f12.png)
