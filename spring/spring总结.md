@@ -43,3 +43,12 @@ https://blog.csdn.net/fengshoudong/article/details/78884349
 
 ****
 
+## 4. bean的初始化和销毁
+
+关于在spring  容器初始化 bean 和销毁前所做的操作定义方式有三种：
+
+[第一种：通过@PostConstruct 和 @PreDestroy 方法 实现初始化和销毁bean之前进行的操作](http://write.blog.csdn.net/postedit/8681497)
+
+第二种是：[通过 在xml中定义init-method 和  destory-method方法](http://blog.csdn.net/topwqp/article/details/8681467)
+
+第三种是：[通过bean实现InitializingBean和 DisposableBean接口](http://blog.csdn.net/topwqp/article/details/8681573)
