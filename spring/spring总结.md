@@ -52,3 +52,48 @@ https://blog.csdn.net/fengshoudong/article/details/78884349
 第二种是：[通过 在xml中定义init-method 和  destory-method方法](http://blog.csdn.net/topwqp/article/details/8681467)
 
 第三种是：[通过bean实现InitializingBean和 DisposableBean接口](http://blog.csdn.net/topwqp/article/details/8681573)
+
+
+
+## 5.spring父子容器
+
+通常的使用过程中，Spring父容器对SpringMVC子容器中的bean是不可见的，而子容器对父容器的中bean却是可见的。
+
+web.xml中的contextLoaderListener在web容器启动时，会监听到web容器的初始化事件，其contextInitialized方法会被调用，在这个方法中，spring会初始化一个启动上下文作为根上下文，即WebApplicationContext。WebApplicationContext只是接口类，其实际的实现类是XmlWebApplicationContext。
+此上下文即作为Spring根容器，其对应的bean定义的配置由web.xml中的context-param中的contextConfigLocation指定。根容器初始化完毕后，Spring以
+WebApplicationContext.ROOTWEBAPPLICATIONCONTEXTATTRIBUTE
+为属性Key，将其存储到ServletContext中，便于获取。
+
+再次，contextLoaderListener监听器初始化完毕后，开始初始化web.xml中配置的Servlet，这个servlet可以配置多个，以最常见的[DispatcherServlet](https://www.baidu.com/s?wd=DispatcherServlet&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd)为例，这个servlet实际上是一个标准的前端控制器，用以转发、匹配、处理每个servlet请求。DispatcherServlet上下文在初始化的时候会建立自己的IoC上下文，用以持有spring mvc相关的bean。在建立DispatcherServlet自己的IoC上下文时，会利用WebApplicationContext.ROOTWEBAPPLICATIONCONTEXTATTRIBUTE先从ServletContext中获取之前的根上下文(即WebApplicationContext)作为自己上下文的parent上下文。有了这个parent上下文之后，再初始化自己持有的上下文。这个DispatcherServlet初始化自己上下文的工作在其initStrategies方法中可以看到，大概的工作就是初始化处理器映射、视图解析等。这个servlet自己持有的上下文默认实现类也是mlWebApplicationContext。初始化完毕后，spring以与servlet的名字相关(此处不是简单的以servlet名为Key，而是通过一些转换，具体可自行查看源码)的属性为属性Key，也将其存到ServletContext中，以便后续使用。这样每个servlet就持有自己的上下文，即拥有自己独立的bean空间，同时各个servlet共享相同的bean，即根上下文(第2步中初始化的上下文)定义的那些bean。
+
+@Vaule注解只能在当前所在容器中获取值，所以在Controller中使用@Value注解只能在springMVC容器中取值，没法取到spring容器中加载的配置文件的值      但是这里有一个例外property-placeholder，容器中读取的配置文件就是私有的，互相不能访问。
+
+## 6. spring如何保证创建的单例不会被jvm回收
+
+底层实现中将所有的bean保存到一个map中， 并且这个map 被final修饰， 可以作为GCRoot, 所以可以保证创建的单例不会被jvm回收。
+
+
+
+
+
+## 7. final关键字
+
+https://www.cnblogs.com/lixiaolun/p/4317004.html
+
+
+
+## 8.stringBuffer和stringBuilder
+
+
+
+
+
+## 9 CAS
+
+CAS存在问题：
+
+- ABA问题：CAS要判断操作值是否发生了变化，如果操作值由A变为B，又由B变为A则CAS无法判断正确。解决ABA问题的方法是加版本号，即使值由A到B再到A，两个A的版本号不同，CAS可以判断出值是否变化。
+
+- 循环时间长开销大：自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。
+
+- 只能保证一个共享变量的原子操作：当对一个共享变量（volatile修饰）执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，例如共享变量a和b，CAS变量a为true，CAS变量b为false但是此时a已经被替换，所以循环CAS无法保证多个共享变量的原子性，这个时候就可以用锁，或者把多个共享变量合并成一个共享变量来操作。将多个变量放到一个对象里来操作。
