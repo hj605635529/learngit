@@ -6,7 +6,7 @@
 
 在分析原理之前我们先回顾下依赖注入的概念：
 
->我们常提起的依赖注入(Dependency Injection)和控制反转(Inversion of Control)是同一个概念。具体含义是:当某个角色(可能是一个Java实例，调用者)需要另一个角色(另一个Java实例，被调用者)的协助时，在 传统的程序设计过程中，通常由调用者来创建被调用者的实例。但在Spring里，创建被调用者的工作不再由调用者来完成，因此称为控制反转;创建被调用者 实例的工作通常由Spring容器来完成，然后注入调用者，因此也称为依赖注入。
+>我们常提起的依赖注入(Dependency Injection)和控制反转(Inversion of Control)是同一个概念。具体含义是:当某个角色(可能是一个Java实例，调用者)需要另一个角色(另一个Java实例，被调用者)的协助时，在 传统的程序设计过程中，通常由调用者来创建被调用者的实例。但在Spring里，创建被调用者的工作不再由调用者来完成，因此称为控制反转;创建被调用者 实例的工作通常由Spring容器来完成，然后注入调用者，因此也称为依赖注入。 
 
 ## 2.依赖注入发生的时间
 
@@ -542,7 +542,8 @@ protected BeanWrapper instantiateBean(final String beanName, final RootBeanDefin
 ```
 
  > 我们重点关注 `getInstantiationStrategy()` 这个方法，可以看到instantiateBean方法的功能实现是通过调用getInstantiationStrategy().instantiate方法实现的。 **getInstantiationStrategy** 方法的作用是获得实例化的策略对象，也就是指通过哪种方案进行实例化的过程。继续跟踪下去我们可以发现，Spring当中提供了两种实例化方案： **BeanUtils** 和 **Cglib** 方式。BeanUtils实现机制是通过Java的反射机制，Cglib是一个第三方类库采用的是一种字节码加强方式机制。 *Spring中采用的默认实例化策略是Cglib。* 
- >   分析到这里我们已经知道了实例化Bean对象的流程，现在已经是万事具备，只欠东风，就剩下对这些建立好的Bean对象建立联系了。
+ >
+ >  >   分析到这里我们已经知道了实例化Bean对象的流程，现在已经是万事具备，只欠东风，就剩下对这些建立好的Bean对象建立联系了。
 
 ### 3.7populateBean()方法
 
