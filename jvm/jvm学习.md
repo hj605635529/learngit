@@ -1,154 +1,28 @@
 # jvm学习
 
-
-
-- 1.
-
-  ![img](https://ws4.sinaimg.cn/large/006tNc79ly1fzqyzfyidaj30k008wagc.jpg)
-
-![image-20190201160657369](/Users/huangjia/Library/Application Support/typora-user-images/image-20190201160657369.png)
-
-为什么需要From 和 To 两个平行的区呢，为什么不直接从Survivor 移到 Old？ 这样设计的好处是什么？难道是因为在移动对象的时候需要压缩调整对象空间，所以这种整体移动的设计会快一点吗？希望大家一起来讨论一下 ^_^
-
-之所以要分两个Survivor，而不是直接从Survivor直接移到old区域，原因是old区域内的对象都是经过若干次yong GC之后存活下来的对象，并不是每一次yong GC存活下来的对象都需要移动到old区域内，所以需要Survivor1和Survivor2来保证Yong内存中的复制算法的实行，提高清除效率。
-
-作者：wuxinliulei
-
-链接：https://www.zhihu.com/question/35164211/answer/68265045
-
-来源：知乎
-
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-
-**4）那些对象可以作为GC Roots？**
-虚拟机栈（栈帧中的本地变量表）中的引用的对象
-方法区中的类静态属性引用的对象
-方法区中的常量引用的对象
-本地方法栈中JNI（Native方法）的引用对象
-
-作者：wuxinliulei
-
-链接：https://www.zhihu.com/question/35164211/answer/68265045
-
-来源：知乎
-
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-
-### Minor GC、Major GC和Full GC之间的区别
-http://www.importnew.com/15820.html
-
-
-
-https://www.zhihu.com/question/35164211
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- ###  Java虚拟机JVM之server模式与client模式的区别
-
-JVM Server模式下应用启动慢但运行速度快，JVM Client模式下应用启动快但运行速度要慢些，推荐：服务器上请以Server模式运行，面客户端或GUI模式下就以Client模式运行
-
--Server模式启动时，速度较慢，但是一旦运行起来后，性能将会有很大的提升，原因是：当虚拟机在-Client模式的时候，使用的是一个代号为C1的轻量级编译器，而-Server模式启动的虚拟机采用相对重量级代号为C2的编译器，C2比C1编译器编译的相对彻底，服务起来之后，性能高。
-
-https://www.jb51.net/article/129592.htm
-
-### 多CPU和多核CPU有什么区别
-
-```java
-双核心是在一个处理器里拥有两个处理器核心，核心是两个，但是其他硬件还都是两个核心在共同拥有，而双CPU则是真正意义上的双核心，不光是处理器核心是两个，其他例如缓存等硬件配置也都是双份的。
-```
-
-https://blog.csdn.net/qingkongyeyue/article/details/73513060
-
-
-
-
-
-
-
-
-
-
-方法区：
-
-- 运行时常量池  （StringTable： HashSet实现） 
-- 
-
-
-
-
-
-### 对象分配：
-
-对象分配时，优先在eden区分配，当eden区空间不足时，触发一次minor gc。minor gc会标记eden区及from survivor区中不可以回收的对象，准备放入to survivor区。 
-
-1.当to survivor区空间足够时，将标记的回收对象复制过去，然后清空eden和from survivor区，然后判断新对象是否能在eden上分配，如果可以，就直接分配，如果不行，这里我就不清楚了 需要做个实验才知道 
-
-2.当eden和from survivor中存活对象，在to survivor中放不下时，需要利用担保机制，将这些对象直接放到老年代。然后再在eden上分配对象
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Java虚拟机JVM之server模式与client模式的区别
+
+  > JVM Server模式下应用启动慢但运行速度快，JVM Client模式下应用启动快但运行速度要慢些，推荐：服务器上请以Server模式运行，面客户端或GUI模式下就以Client模式运行
+  >
+  > -Server模式启动时，速度较慢，但是一旦运行起来后，性能将会有很大的提升，原因是：当虚拟机在-Client模式的时候，使用的是一个代号为C1的轻量级编译器，而-Server模式启动的虚拟机采用相对重量级代号为C2的编译器，C2比C1编译器编译的相对彻底，服务起来之后，性能高。
+  >
+  > https://www.jb51.net/article/129592.htm
+
+- 多cpu和多核cpu有什么区别？
+
+  > 双核心是在一个处理器里拥有两个处理器核心，核心是两个，但是其他硬件还都是两个核心在共同拥有，而双CPU则是真正意义上的双核心，不光是处理器核心是两个，其他例如缓存等硬件配置也都是双份的。
+  >
+  > https://blog.csdn.net/qingkongyeyue/article/details/73513060
+
+- jvm常用命令有哪些？
+
+  > Jinfo   查看参数信息
+  >
+  > Jstat -gcutil 12345  2000 10  每隔2秒查看12345进程的参数信息， 共查看10次。
+  >
+  > Jmap -heap  查看堆的大小情况。-dump  dump文件
+  >
+  > Jstack 生成java虚拟机当前时刻的线程快照
 
 - 双亲委派机制
 
@@ -169,33 +43,73 @@ https://blog.csdn.net/qingkongyeyue/article/details/73513060
   >
   > 可达性分析， 从gc Roots开始， 做可达性分析， 如果某个对象不在引用连中， 表示这个对象可以被gc
 
+- 那些对象可以作为GCroot呢？
+
+  > 虚拟机栈（栈帧中的本地变量表）中的引用的对象
+  > 方法区中的类静态属性引用的对象
+  > 方法区中的常量引用的对象
+  > 本地方法栈中JNI（Native方法）的引用对象
+
 - Minor GC 和Full GC?
 
   > 当在新生代的eden区为对象分配空间时，分配不下，会触发一次minor gc。 
 
   > 如果创建一个大对象，Eden区域当中放不下这个大对象，会直接保存在老年代当中，如果老年代空间也不足，就会触发Full GC
   >
-  >  出现promotion failure 和concurrent model failure， 接下去就会发生Full GC. 
-  >
   > 显示调用System.gc
+  >
+  >  出现promotion failure 和concurrent model failure， 接下去就会发生Full GC. 
   >
   > 如果有持久代空间的话，系统当中需要加载的类，调用的方法很多，同时持久代当中没有足够的空间，就出触发一次Full GC
   >
-  > 
+
+- 什么是promotion failure， concurrent model failure?
+
+  > promotion failed是在进行Minor GC时，survivor space放不下、对象只能放入旧生代，而此时旧生代也放不下造成的；concurrent mode failure是在执行CMS GC的过程中同时有对象要放入旧生代，而此时旧生代空间不足造成的。
+  >
+  > concurrent mode failure影响
+  >
+  > 老年代的垃圾收集器从CMS退化为Serial Old，所有应用线程被暂停，停顿时间变长。
+  >
+  > 可能原因及方案
+  > 原因1：CMS触发太晚
+  >
+  > 1. 方案：将-XX:CMSInitiatingOccupancyFraction=N调小；
+  >
+  > 原因2：空间碎片太多
+  > 方案：开启空间碎片整理，并将空间碎片整理周期设置在合理范围；
+  >
+  > 1. -XX:+UseCMSCompactAtFullCollection （空间碎片整理）
+  > 2. -XX:CMSFullGCsBeforeCompaction=n
+  >
+  > 原因3：垃圾产生速度超过清理速度
+  >
+  > 1. 晋升阈值过小；
+  > 2. Survivor空间过小，导致溢出；
+  > 3. Eden区过小，导致晋升速率提高；
+  > 4. 存在大对象；
 
 - 垃圾回收算法？
 
   > 复制算法 -- 空间利用率只有50%， 当一半空间已经分配不了内存时， 将空间内存活的对象复制到另一半空间中， 优势是：简单，不会产生内存碎片。
   >
-  > 标记清除算法： 标记那些需要被回收的对象， 然后清除。 标记和清除两个阶段都要消耗时间， 并且会产生内存碎片。
+  > 标记清除算法：遍历所有的GCRoots，将GCRoots可达的对象标记为存活的对象，然后在遍历堆中所有的对象，将没有标记对象清除。 标记和清除两个阶段都要消耗时间， 并且会产生内存碎片。
   >
-  > 标记整理算法：标记那些需要被回收的对象， 然后将存活的对象移动到一端。直接清除端以为的对象。
+  > 标记整理算法：遍历所有的GCRoots，将GCRoots可达的对象标记为存活的对象 然后将存活的对象移动到一端。直接清除端以为的对象。
   >
   > 分代收集算法： 比如新生代使用复制算法， 老年代使用标记清除算法。
+
+- 垃圾收集器？
+
+  > ![image-20190323192941274](https://ws4.sinaimg.cn/large/006tKfTcly1g1cye7i29yj30ng0exq54.jpg)
 
 - 垃圾回收器G1？
 
   > G1建立可预测停顿时间模型， 可以在m毫秒的时间内进行n毫秒的垃圾回收，不需要和其他垃圾收集器配合使用， 在新生代和老年代都使用G1, 而且G1使用的标记整理算法， 不会产生内存碎片。有下面几个回收步骤： 1.初始标记， 2.并发标记  3.最终标记  4. 筛选回收
+
+- CMS收集器的缺点？
+
+  ![选区_754.png](https://i.loli.net/2019/02/24/5c72bebc4cbfd.png)
 
 - jvm参数？
 
@@ -243,73 +157,37 @@ https://blog.csdn.net/qingkongyeyue/article/details/73513060
 
 - java 引用类型
 
+  > 强引用：我们创建的对象就是强引用
+  >
+  > 软引用：当内存足够的时候，对象不会被回收， 内存不够的时候， 对象被回收
+  >
+  > 弱引用：只要进行垃圾回收，就会被回收
+  >
+  > 虚引用： 和没有引用差不多
+  >
   > https://www.cnblogs.com/liyutian/p/9690974.html
 
+- Minor GC、Major GC和Full GC之间的区别
 
+  > http://www.importnew.com/15820.html
+  >
+  > https://www.zhihu.com/question/35164211
 
+- 为什么新生代需要两个s区？
 
+  > ![img](https://ws4.sinaimg.cn/large/006tNc79ly1fzqyzfyidaj30k008wagc.jpg)
+  >
+  > ![image-20190201160657369](/Users/huangjia/Library/Application Support/typora-user-images/image-20190201160657369.png)
+  >
+  > 为什么需要From 和 To 两个平行的区呢，为什么不直接从Survivor 移到 Old？ 这样设计的好处是什么？难道是因为在移动对象的时候需要压缩调整对象空间，所以这种整体移动的设计会快一点吗？希望大家一起来讨论一下 ^_^
+  >
+  > 之所以要分两个Survivor，而不是直接从Survivor直接移到old区域，原因是old区域内的对象都是经过若干次yong GC之后存活下来的对象，并不是每一次yong GC存活下来的对象都需要移动到old区域内，所以需要Survivor1和Survivor2来保证Yong内存中的复制算法的实行，提高清除效率。
 
+- 担保机制？
 
-
-
-
-
-
-
-
-
-
-
-
-```java
-@Override
-public void process(ProcessContext context) {
-    Map<String, WrapperPrice> originalPrices = context.getHotelPriceDetail().getOriginalPrices();
-    if (MapUtils.isEmpty(originalPrices)) {
-        return;
-    }
-    boolean seen = false;
-    List<RoomPriceInfo> acc = null;
-    for (Map.Entry<String, WrapperPrice> stringWrapperPriceEntry : originalPrices.entrySet()) {
-        if (Objects.nonNull(stringWrapperPriceEntry) && Objects.nonNull(stringWrapperPriceEntry.getValue())) {
-            if (priceFilterRuleService.isNotFilterWrapper(context, stringWrapperPriceEntry.getValue())) {
-                List<RoomPriceInfo> hotelPriceInfos = getHotelPriceInfos(context, stringWrapperPriceEntry.getValue());
-                if (CollectionUtils.isNotEmpty(hotelPriceInfos)) {
-                    if (!seen) {
-                        seen = true;
-                        acc = hotelPriceInfos;
-                    } else {
-                        acc = ListUtils.sum(acc, hotelPriceInfos);
-                    }
-                }
-            }
-        }
-    }
-    (seen ? Optional.of(acc) : Optional.<List<RoomPriceInfo>>empty())
-            .ifPresent(o -> context.getHotelPriceInfo().getMobilePrices().addAll(o));
-}
-```
-
-lambda表达式的好处：filter就相当于if判断
-
-```java
-@Override
-public void process(ProcessContext context) {
-    Map<String, WrapperPrice> originalPrices = context.getHotelPriceDetail().getOriginalPrices();
-    if (MapUtils.isEmpty(originalPrices)) {
-        return;
-    }
-    originalPrices.entrySet().stream()
-            .filter(o -> Objects.nonNull(o) && Objects.nonNull(o.getValue()))
-            .filter(o -> priceFilterRuleService.isNotFilterWrapper(context, o.getValue()))
-            .map(o -> getHotelPriceInfos(context, o.getValue()))
-            .filter(CollectionUtils::isNotEmpty)
-            .reduce(ListUtils::sum)
-            .ifPresent(o -> context.getHotelPriceInfo().getMobilePrices().addAll(o));
-}
-```
-
-
+  > 对象分配时，优先在eden区分配，当eden区空间不足时，触发一次minor gc。minor gc会标记eden区及from survivor区中不可以回收的对象，准备放入to survivor区。 
+  >
+  > 当eden和from survivor中存活对象，在to survivor中放不下时，需要利用担保机制，将这些对象直接放到老年代。然后再在eden上分配对象
 
 
 
