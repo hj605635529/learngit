@@ -63,6 +63,18 @@ https://www.cnblogs.com/annsshadow/p/5037667.html
 
 ![image-20190301111823271](https://ws3.sinaimg.cn/large/006tKfTcly1g0n4k8fb9pj31m60u07o9.jpg)
 
+ #### 2.2.1Innodb和myisam区别？
+
+1.innodb索引叶子节点存放数据， myisam叶子节点存放记录的位置，所以myisam会被innodb多一次磁盘io操作
+
+2.myisam索引会存下表中数据的行数， innodb不会。
+
+3.myisam索引支持的锁粒度为表锁， innodb锁粒度为行数。
+
+4.myisam索引不支持事物， innodb支持事物。
+
+
+
 ### 2.3 那些字段适合做为索引
 
 ![选区_771.png](https://i.loli.net/2019/03/04/5c7bfc7dd5fc6.png)
@@ -108,6 +120,10 @@ https://www.cnblogs.com/annsshadow/p/5037667.html
 一个事务按相同的查询条件去查原来查过的数据， 发现有有其他事务插入满足条件的数据，这种现象就叫幻读。
 
 一句话：事务A读取到了事务B已经新增的数据，不符合隔离性
+
+RC实现原理是啥：每次执行读的时候都会创建一个视图， 视图中存放当前活跃的事物， 然后从undo.log中读取最新的版本号， 当该行事物id小于视图中最小id,输出。
+
+<https://blog.csdn.net/joy0921/article/details/80128857>
 
 ### 2.6 explain性能分析
 
