@@ -65,4 +65,8 @@ https://blog.csdn.net/autfish/article/details/52513465
 ## idea快捷建
 
 - alt+f8 可以查看要搜变量
+- Command + y   删除一行
+- Command + d  复制一行
+- Shift + enter     在当前行下面插入一个空行(光标跳到空行行首)
+- command + shift + down  向下移动一行
 
