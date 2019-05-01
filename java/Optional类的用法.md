@@ -2,17 +2,45 @@
 
 [TOC]
 
-## 介绍
+## 1.介绍
 
 空指针异常是导致Java应用程序失败的最常见原因。以前，为了解决空指针异常，Google公司著名的Guava项目引入了Optional类，Guava通过使用检查空值的方式来防止代码污染，它鼓励程序员写更干净的代码。受到Google Guava的启发，Optional类已经成为Java 8类库的一部分。**Optional实际上是个容器：它可以保存类型T的值，或者仅仅保存nul** l。Optional提供很多有用的方法，这样我们就不用显式进行空值检测。
 
+使用Optional而不是null的一个非常重要而又实际的语义区别是，我们 在声明变量时使用的是Optional<Car>类型，而不是Car类型，这句声明非常清楚地表明了这 里发生变量缺失是允许的。与此相反，使用Car这样的类型，可能将变量赋值为null，这意味 着你需要独立面对这些，你只能依赖你对业务模型的理解，判断一个null是否属于该变量的有 效范畴。 
 
+![image-20190501115346270](https://ws2.sinaimg.cn/large/006tNc79gy1g2lodvepk1j316b0u0171.jpg)
 
-## 源码剖析
+## 2.源码剖析
 
+### 2.1 创建Optional对象
 
+-  声明一个空的Optional 
 
-### Optional.of()或Optional.ofNullable()
+你可以通过静态工厂方法Optional.empty，创建一个空的Optional 对象: 
+
+```java
+    Optional<Car> optCar = Optional.empty();
+```
+
+-  依据一个非空值创建Optional 你还可以使用静态工厂方法Optional.of，依据一个非空值创建一个Optional对象: 
+
+```java
+    Optional<Car> optCar = Optional.of(car);
+```
+
+如果car是一个null，这段代码会立即抛出一个NullPointerException，而不是等到你 试图访问car的属性值时才返回一个错误。 
+
+- 可接受null的Optional 
+
+最后，使用静态工厂方法Optional.ofNullable，你可以创建一个允许null值的Optional 对象: 
+
+```java
+    Optional<Car> optCar = Optional.ofNullable(car);
+```
+
+如果car是null，那么得到的Optional对象就是个空对象。 
+
+- 实例演示
 
 Optional.of()或者Optional.ofNullable()：创建Optional对象，差别在于of不允许参数是null，而ofNullable则无限制
 
@@ -83,17 +111,17 @@ public final class Optional<T> {
         this.value = Objects.requireNonNull(value);
     }
     
-    public static<T> Optional<T> empty() {
+    public static<T> Optional<T> empty() {      //返回一个空的Optional对象
         @SuppressWarnings("unchecked")
         Optional<T> t = (Optional<T>) EMPTY;
         return t;
     }
    
-    public static <T> Optional<T> of(T value) {
+    public static <T> Optional<T> of(T value) { //of静态方法， 参数不能为空
         return new Optional<>(value);
     }
 
-    public static <T> Optional<T> ofNullable(T value) {
+    public static <T> Optional<T> ofNullable(T value) {//参数为空，返回一个创建好的empty对象
         return value == null ? empty() : of(value);
     }
     
@@ -106,6 +134,12 @@ public final class Optional<T> {
     .......
 }
 ```
+
+### 2.2 使用map从Optional对象中提取和转换值
+
+
+
+
 
 ### isPresent()
 
