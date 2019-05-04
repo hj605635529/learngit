@@ -130,7 +130,10 @@ Stream<User> stream = users.stream();  //stream()方法是父类Collection中的
 
 ```java
 String[] str = {"Hello World", "Jiaming Chen", "Zhouhang Cheng"};
-Stream<String> stream = Stream.of(str);12
+Stream<String> stream = Stream.of(str);
+
+//方式二
+Stream<String> stream2 = Arrays.stream(array);
 ```
 
 - 通过单个元素构造
@@ -174,11 +177,63 @@ Set<String> strSet = stream.collect(Collectors.toSet());
    `flatMap`方法是一对多的映射，对每一个元素映射出来的仍旧是一个`Stream`，然后会将这个`子Stream`的元素映射到父集合中，栗子如下： 
 
 ```java
-Stream<List<Integer>> inputStream = Stream.of(Arrays.asList(1), Arrays.asList(2, 3), Arrays.asList(4, 5, 6));
-List<Integer> integerList = inputStream.flatMap((childList) -> childList.stream()).collect(Collectors.toList());
-//将一个“二维数组”flat为“一维数组”
-integerList.forEach(System.out::println);
+public class StreamDemo {
+
+
+    public static Stream<Character> filterCharacter(String str){
+
+        List<Character> characterList = Lists.newArrayList();
+
+        for (Character ch : str.toCharArray()){
+            characterList.add(ch);
+        }
+
+        return  characterList.stream();
+    }
+
+    @Test
+    public void testFlatMap(){
+
+        //map函数生成一个大的stream，把每个小的stream直接放到一个大的stream中。
+        Stream<Stream<Character>> streamStream = Arrays.asList("hello", "world", "cccc").stream().map(StreamDemo::filterCharacter);
+        streamStream.forEach(sm->{sm.forEach(System.out::println);});
+
+        //flatmap函数生成一个大的strem, 把每个小的stream中的元素放到这个大stream中
+        Stream<Character> characterStream = Arrays.asList("hello", "world", "cccc").stream().flatMap(StreamDemo::filterCharacter);
+        characterStream.forEach(System.out::println);
+
+
+    }
+}
 ```
+
+结果：
+
+```java
+h
+e
+l
+l
+o
+w
+o
+r
+l
+d
+
+h
+e
+l
+l
+o
+w
+o
+r
+l
+d
+```
+
+
 
 - limit、skip
 
@@ -495,5 +550,10 @@ Map<String, Integer> resultMap = Maps.newHashMap();
 
 
 
+## 案例分析：
 
+![image-20190504173444107](https://ws1.sinaimg.cn/large/006tNc79gy1g2pf3rxwgfj312h0m5adr.jpg)
 
+![image-20190504173529422](https://ws2.sinaimg.cn/large/006tNc79gy1g2pf4is7atj311e0j5tea.jpg)
+
+![image-20190504173610976](https://ws4.sinaimg.cn/large/006tNc79gy1g2pf5316gxj30ye0dgdhc.jpg)
